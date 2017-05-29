@@ -27,17 +27,16 @@ export class AuthService {
 
     console.log(this.currentUser);
 
-    // return this.getCurrentUser(this.currentUser);
-
-    // return Observable.of(this.currentUser);
-    // ^ demo
+    return Observable.of(this.currentUser);
 
     // login
+    /*
     return this.http.post('/api/login', { login: username, password: password })
        .map(res => {
          this.currentUser.firstName = (<any>res).data.account.givenName;
          return res.json();
        });
+    */
   }
 
   getCurrentUser(user = {}): Observable<any> {
@@ -74,7 +73,7 @@ export class AuthService {
     });
   }
   isAuthenticated() : boolean {
-      return false;
+    return !!this.currentUser;;
   }
 }
 

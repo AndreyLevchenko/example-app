@@ -7,6 +7,8 @@ import { HttpModule } from '@angular/http';
 
 import {AppComponent} from './app.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
+import {LoginComponent} from './login/login.component';
+import {SignupComponent} from './signup/signup.component';
 import {NavigationComponent} from './components/navigation/navigation.component';
 
 import { AuthService } from './shared/auth/auth.service';
@@ -17,7 +19,10 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: DashboardComponent
-  }
+  },
+  { path: 'signup', component: SignupComponent, data: { title: 'Sign Up' } },
+  { path: 'login', component: LoginComponent, data: { title: 'Login' } }
+  
 ];
 
 
@@ -25,7 +30,9 @@ export const routes: Routes = [
   declarations: [
     AppComponent,
     DashboardComponent,
-    NavigationComponent
+    NavigationComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     // Angular related
