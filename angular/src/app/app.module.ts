@@ -22,8 +22,8 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard]
   },
-  { path: 'signup', component: SignupComponent, data: { title: 'Sign Up' } },
-  { path: 'login', component: LoginComponent, data: { title: 'Login' } }
+  { path: 'signup', component: SignupComponent, data: { title: 'Sign Up', hideNavigation : true} },
+  { path: 'login', component: LoginComponent, data: { title: 'Login', hideNavigation : true} }
   
 ];
 

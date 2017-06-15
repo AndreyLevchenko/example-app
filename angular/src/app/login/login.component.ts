@@ -11,14 +11,19 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
     username: string;
     password: string;
+    errorMessage: string;
 
     constructor(private authService: AuthService, private router: Router) {}
 
     ngOnInit() {
     }
     doLogin() {
+        this.errorMessage = "";
+        
         this.authService.login(this.username, this.password).subscribe(_ => {
           this.router.navigate(['/']);
+        }, err => {
+            this.errorMessage = "Some weird error while login, probably password was wrong";
         });
             
     }

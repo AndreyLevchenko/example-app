@@ -3,6 +3,8 @@ import {Http} from '@angular/http';
 import {Headers}  from '@angular/http';
 
 import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/of';
 
 export class IUser {
     username: string;
@@ -43,6 +45,18 @@ export class AuthService {
     }
     getCurrentUser() {
         return JSON.parse(sessionStorage.getItem(AuthService.STORAGE_PROPERTY_KEY));
+    }
+    checkAuth(): Observable<boolean> {
+        return this.http.get('/api/users/current')
+            .map(res => {
+                return res.status === 200;
+            }).catch(err => {
+                if(err.status === 401) {
+                    sessionStorage.removeItem(AuthService.STORAGE_PROPERTY_KEY);
+                }
+                return Observable.of(false);
+            });
+        
     }
 }
 

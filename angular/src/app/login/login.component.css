@@ -44,3 +44,7 @@
     padding: 10px;
     font-size: 16px;
 }
+.error {
+    color : red;
+    padding-bottom: 5px;
+}

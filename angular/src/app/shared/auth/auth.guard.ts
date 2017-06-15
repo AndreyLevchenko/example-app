@@ -5,15 +5,15 @@ import { AuthService} from './auth.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private authService: AuthService ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        if (sessionStorage.getItem(AuthService.STORAGE_PROPERTY_KEY)) {
-            return true;
-        }
-
-        this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
-        return false;
+        return this.authService.checkAuth().map(status => {
+            if (!status) {
+                this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
+            }
+            return status;
+        });
     }
 }
 
