@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.rest.SuccessLoginHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SuccessLoginHandler successLoginHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -36,9 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .formLogin()
                 .loginPage("/api/login")
-                .successHandler((HttpServletRequest request, HttpServletResponse response, Authentication a) -> {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                })
+                .successHandler(successLoginHandler)
                 .failureHandler((HttpServletRequest request, HttpServletResponse response, AuthenticationException ae) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 })

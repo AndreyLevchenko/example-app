@@ -5,7 +5,6 @@ import com.example.repository.UserRepository;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
  *
  * @author andrey
  */
-@Component()
+@Component
 public class ExampleUserDetailsService implements UserDetailsService{
     private UserRepository userRepository;
 
@@ -25,7 +24,6 @@ public class ExampleUserDetailsService implements UserDetailsService{
         this.userRepository = userRepository;
     }
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(final String username) {
         Optional<User> userFromDatabase = userRepository.findOneByUsername(username);
 

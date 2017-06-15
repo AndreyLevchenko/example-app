@@ -12,13 +12,15 @@ import {SignupComponent} from './signup/signup.component';
 import {NavigationComponent} from './components/navigation/navigation.component';
 
 import { AuthService } from './shared/auth/auth.service';
+import { AuthGuard } from './shared/auth/auth.guard';
 
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
   },
   { path: 'signup', component: SignupComponent, data: { title: 'Sign Up' } },
   { path: 'login', component: LoginComponent, data: { title: 'Login' } }
@@ -48,7 +50,8 @@ export const routes: Routes = [
     
   ],
   providers: [
-    AuthService
+    AuthService,
+    AuthGuard
   ],  
   bootstrap: [AppComponent]
 })

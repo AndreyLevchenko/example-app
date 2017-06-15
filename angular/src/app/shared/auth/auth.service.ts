@@ -1,79 +1,48 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {Headers}  from '@angular/http';
 
-import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/observable/of'; // can be removed later this is just for Demo purposes now
+import {Observable} from 'rxjs/Observable'
 
 export class IUser {
-  firstName: string;
-  lastName: string;
+    username: string;
+    firstName: string;
+    lastName: string;
 }
 
 @Injectable()
 export class AuthService {
+    public static STORAGE_PROPERTY_KEY:string = "currentUser";
 
-  public currentUser: IUser = null;
-  public authenticating: boolean = false;
+    public currentUser: IUser = null;
+    public authenticating: boolean = false;
 
-  constructor(private http: Http) { }
-  
-  login(username: string, password: string): Observable<any> {
+    constructor(private http: Http) {}
 
-    // Demo purpose only
-    this.currentUser = {
-      firstName: username,
-      lastName: 'DEMO_DEMO'
-    };
-
-    console.log(this.currentUser);
-
-    return Observable.of(this.currentUser);
-
-    // login
-    /*
-    return this.http.post('/api/login', { login: username, password: password })
-       .map(res => {
-         this.currentUser.firstName = (<any>res).data.account.givenName;
-         return res.json();
-       });
-    */
-  }
-
-  getCurrentUser(user = {}): Observable<any> {
-    return Observable.of(user);
-  }
-
-  authenticate() {
-    if (this.authenticating) {
-      return;
-    } else {
-      this.authenticating = true;
+    login(username: string, password: string): Observable<any> {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');        
+        
+        // login
+        return this.http.post('/api/login', "username=" + username + "&password=" + password, {headers : headers})
+            .map(res => {
+                let json = res.json();
+                sessionStorage.setItem(AuthService.STORAGE_PROPERTY_KEY, JSON.stringify(json));
+                return json;
+            });
     }
 
+    logout(): void {
+        this.http.post('/api/logout', {}).subscribe(_ => {
+            sessionStorage.removeItem(AuthService.STORAGE_PROPERTY_KEY);
+        });
+    }
 
-    // Fake User above used for now
-
-    // this.http.get('/api/users/current').map(res => res.json()).subscribe(
-    //   res => {
-    //     this.currentUser = res.data;
-    //     this.authenticating = false;
-    //     // $location.path("/");
-    //   },
-    //   err => {
-    //     this.authenticating = false;
-    //     this.currentUser = null;
-    //     // $location.path("/login");
-    //   });
-  }
-
-  logout(): void {
-    this.http.post('/api/logout', {}).subscribe(_ => {
-      this.currentUser = null;
-      // $location.path("/login");
-    });
-  }
-  isAuthenticated() : boolean {
-    return !!this.currentUser;;
-  }
+    isAuthenticated(): boolean {
+        return !!sessionStorage.getItem(AuthService.STORAGE_PROPERTY_KEY);
+    }
+    getCurrentUser() {
+        return JSON.parse(sessionStorage.getItem(AuthService.STORAGE_PROPERTY_KEY));
+    }
 }
 
