@@ -1,4 +1,4 @@
-import { AlertModule } from 'ngx-bootstrap';
+import { AlertModule, BsDropdownModule } from 'ngx-bootstrap';
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
@@ -46,7 +46,8 @@ export const routes: Routes = [
     RouterModule.forRoot(routes),
 
     // Third-party Libraries
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    BsDropdownModule.forRoot()
     
   ],
   providers: [

@@ -1,6 +1,8 @@
 package com.example.config;
 
 import com.example.rest.SuccessLoginHandler;
+import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
  *
@@ -42,11 +46,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(successLoginHandler)
                 .failureHandler((HttpServletRequest request, HttpServletResponse response, AuthenticationException ae) -> {
                     response.setHeader("Content-Type", "application/json");
-                    response.setStatus(HttpServletResponse.SC_OK);
                     response.getOutputStream().println("{}");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 })
-                .and().logout().logoutUrl("/api/logout")
+                .and().logout().logoutUrl("/api/logout").logoutSuccessHandler((HttpServletRequest request, HttpServletResponse response, Authentication a) -> {
+                        response.setHeader("Content-Type", "application/json");
+                        response.getOutputStream().println("{}");
+                        response.setStatus(HttpServletResponse.SC_OK);
+                    })
                 .and().exceptionHandling().authenticationEntryPoint((HttpServletRequest request, HttpServletResponse response, AuthenticationException ae) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 })

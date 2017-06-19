@@ -4,6 +4,7 @@ import {Headers}  from '@angular/http';
 
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/of';
 
 export class IUser {
@@ -34,8 +35,8 @@ export class AuthService {
             });
     }
 
-    logout(): void {
-        this.http.post('/api/logout', {}).subscribe(_ => {
+    logout(): Observable<any> {
+        return this.http.post('/api/logout', {}).do(_ => {
             sessionStorage.removeItem(AuthService.STORAGE_PROPERTY_KEY);
         });
     }
